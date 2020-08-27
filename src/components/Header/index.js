@@ -5,7 +5,7 @@ import './styles.css';
     return (
         <header id="header-content">
           <div className="container">
-            <h1>SoftExpert</h1>
+            <h1>Analytics</h1>
           </div>
         </header>
     );
