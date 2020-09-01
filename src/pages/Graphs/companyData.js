@@ -1,8 +1,12 @@
-import apiChart from '../../services/highcharts'
+import apiChart from '../../services/infoApi'
 
-const loadCompany = async (id) => {
-    const response = await apiChart.get(`income-statement/${id}?period=quarter&apikey=79b639cc05a3a6033f4e9c71233a74fc`);
-    return response.data;
-}
-
+const loadCompany = (dataIds, callback) =>
+    apiChart.get(`quote/${dataIds.join(",")}?apikey=79b639cc05a3a6033f4e9c71233a74fc`)
+        .then((response) => {
+            callback(response);
+            return response;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 export { loadCompany }

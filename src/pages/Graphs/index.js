@@ -1,47 +1,42 @@
-import React, { Component} from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import React, { Component } from 'react';
+import Chart from '../../components/chart'
 import { loadCompany } from './companyData'
 
 export default class Graphs extends Component {
 
   state = {
-    companys:[]
+    companys: []
   }
 
-  async componentDidMount() {
-    const companysProps = this.props.location.state.companys;
-    const items = []
-
-    const getInfo = async item => {
-      const companyLoaded = loadCompany(item)
-      items.push(companyLoaded)
-    }
-     companysProps.map(getInfo);
-     this.setState({companys: items})
-}
-
-render(){
-
-  console.log(this.state);
-
-  const options = {
-    chart: {
-      type: 'spline'
-    },
-    title: {
-      text: ''
-    },
-    series: [
-      {
-        data: [1, 2, 1, 4, 3, 6]
-      }
-    ]
-  };
-  return(
-  <div className="container">
-    <HighchartsReact highcharts={Highcharts} options={options} />
-  </div>
-  )
+  componentDidMount() {
+    const { companys } = this.props.location.state;
+    loadCompany(companys, (response) => {
+      console.log(response);
+      this.setState({ companys: response.data });
+    })
+  }
+  render() {
+    const { companys } = this.state;
+    const hasCompanys = companys && Array.isArray(companys) && companys.length > 0;
+    console.log('hasCompanys', hasCompanys);
+    return (
+      <div>
+        {
+          hasCompanys
+            ?
+            (companys.map((company, index) => {
+              console.log(company)
+              return (
+                // <p key={`company_${index}`}>Code: {company.symbol}</p>
+                <Chart
+                  key={`company_${index}`}
+                  data={[2, company.price]}
+                  title={company.name} />
+              );
+            }))
+            : 'Carregando...'
+        }
+      </div>
+    )
   }
 }
